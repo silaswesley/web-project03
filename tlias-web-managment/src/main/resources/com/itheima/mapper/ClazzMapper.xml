@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.ClazzMapper">
+
+    <!-- 条件查询班级信息 -->
+    <select id="list" resultType="com.itheima.pojo.Clazz">
+        SELECT c.*, e.name AS masterName
+        FROM clazz c
+        LEFT JOIN emp e ON c.master_id = e.id
+        <where>
+            <if test="name != null and name != ''">
+                 c.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="begin != null and end != null">
+                AND c.begin_date between #{begin} and #{end}
+            </if>
+        </where>
+        order by c.update_time desc
+    </select>
+
+    <!-- 根据Id查询班级信息 -->
+    <resultMap id="ClazzWithMasterResultMap" type="com.itheima.pojo.Clazz">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="room" column="room"/>
+        <result property="beginDate" column="begin_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="masterId" column="master_id"/>
+        <result property="subject" column="subject"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="masterName" column="master_name"/>
+    </resultMap>
+
+    <select id="getById" resultMap="ClazzWithMasterResultMap">
+        SELECT
+        c.id,
+        c.name,
+        c.room,
+        c.begin_date,
+        c.end_date,
+        c.master_id,
+        c.subject,
+        c.create_time,
+        c.update_time,
+        e.name AS master_name
+        FROM clazz c
+        LEFT JOIN emp e ON c.master_id = e.id
+        WHERE c.id = #{id}
+    </select>
+
+    <update id="updateById">
+        UPDATE clazz
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="room != null">room = #{room},</if>
+            <if test="beginDate != null">begin_date = #{beginDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="masterId != null">master_id = #{masterId},</if>
+            <if test="subject != null">subject = #{subject},</if>
+            <if test="updateTime != null">update_time = #{updateTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 统计班级人数 -->
+    <select id="countClazzData" resultType="java.util.Map">
+        select
+            (case when id=1 then 'JavaEE就业163期'
+                  when id=4 then '前端就业90期'
+                  when id=5 then 'JavaEE就业165期'
+                  when id=6 then 'JavaEE就业166期'
+                  when id=7 then '大数据就业58期'
+                  when id=8 then 'JavaEE就业167期'
+                  when id=10 then 'JavaEE就业162期'
+                  else '其他' end) pos,
+            count(*) num
+        from clazz group by name order by num;
+    </select>
+
+
+</mapper>

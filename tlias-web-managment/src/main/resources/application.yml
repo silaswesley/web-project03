@@ -1,0 +1,17 @@
+#配置数据库连接信息
+
+    spring:
+      application:
+        name: tlias-web-managment
+#数据库连接信息
+      datasource:
+          url: jdbc:mysql://localhost:3306/tlias
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          username: root
+          password: 123123
+
+#Mybatis相关信息
+    mybatis:
+      configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+        map-underscore-to-camel-case: false
