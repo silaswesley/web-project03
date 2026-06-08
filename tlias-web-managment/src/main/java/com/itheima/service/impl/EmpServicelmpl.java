@@ -5,10 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.itheima.mapper.DeptMapper;
 import com.itheima.mapper.EmpExperMapper;
 import com.itheima.mapper.EmpMapper;
-import com.itheima.pojo.Emp;
-import com.itheima.pojo.EmpExpr;
-import com.itheima.pojo.EmpQueryParam;
-import com.itheima.pojo.PageResult;
+import com.itheima.pojo.*;
 import com.itheima.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,5 +102,17 @@ public class EmpServicelmpl implements EmpService {
             empExperMapper.insertBatch(exprList);
         }
 
+    }
+
+    /**
+     * 登入
+     */
+    @Override
+    public LogInfo login(Emp emp) {
+        Emp e = empMapper.seleByUsernameAndPassword(emp);
+        if(e!=null){
+            return  new LogInfo(e.getId(),e.getUsername(),e.getName(),"");
+        }
+        return null;
     }
 }

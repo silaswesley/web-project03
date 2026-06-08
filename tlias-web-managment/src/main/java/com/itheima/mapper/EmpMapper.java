@@ -2,13 +2,17 @@ package com.itheima.mapper;
 
 import com.itheima.pojo.Emp;
 import com.itheima.pojo.EmpQueryParam;
+import com.itheima.pojo.LogInfo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import static net.sf.jsqlparser.parser.feature.Feature.select;
 
 @Mapper
 public interface EmpMapper {
@@ -51,4 +55,11 @@ public interface EmpMapper {
      * 统计员工性别人数
      */
     List<Map<String, Object>> countEmpGenderData();
+
+
+    /**
+     * 登入
+     */
+    @Select("select id,username,name from emp where username=#{username} and password = #{password} ")
+    Emp seleByUsernameAndPassword(Emp emp);
 }
